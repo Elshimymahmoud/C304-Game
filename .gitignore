@@ -8,7 +8,7 @@
 *.iml
 *.ipr
 *.iws
-
+*.iwsg
 # JOGL native libraries (often large binaries)
 # Note: Only ignore if you plan to manually manage dependencies on the remote side.
 # If you want to include all JOGL dependencies, remove these lines:

@@ -71,7 +71,8 @@ public class BouncingBallEventListener implements GLEventListener,KeyListener, M
     public void init(GLAutoDrawable glAutoDrawable) {
         fillBricks();
         GL gl = glAutoDrawable.getGL();
-        gl.glClearColor(0.0f, 0.0f, 0.4f, 1.0f);        gl.glEnable(GL.GL_TEXTURE_2D);
+        // MODIFIED: Changed clear color to Deep Space Blue (R:0.1, G:0.1, B:0.2)
+        gl.glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
         gl.glEnable(GL.GL_TEXTURE_2D);
         gl.glBlendFunc(GL.GL_SRC_ALPHA,GL.GL_ONE_MINUS_SRC_ALPHA);
         generateTextures(textureNames,texture,textures,gl);
@@ -84,7 +85,10 @@ public class BouncingBallEventListener implements GLEventListener,KeyListener, M
         GL gl = glAutoDrawable.getGL();
         gl.glClear(GL.GL_COLOR_BUFFER_BIT);
         gl.glLoadIdentity();
-        DrawBackground(gl);
+
+        // MODIFIED: Commented out to reveal the solid background color set in init()
+        // DrawBackground(gl);
+
         showBricks(gl);
         DrawSprite(gl, xPaddle, yPaddle, textures, 0, 0, 4.5f, 1);
         DrawSprite(gl, 90, 90, textures, 3, 0, 1.5f, 1.5f);
@@ -278,6 +282,7 @@ public class BouncingBallEventListener implements GLEventListener,KeyListener, M
         gl.glGenTextures(textureNames.length,textures,0);
         for (int i = 0; i < textureNames.length; i++) {
             try {
+                // The GL_RGBA and GL_UNSIGNED_BYTE parameters ensure correct texture loading
                 texture[i] = TextureReader.readTexture(assetsFolderName + "//" + textureNames[i] , true);
                 gl.glBindTexture(GL.GL_TEXTURE_2D, textures[i]);
                 new GLU().gluBuild2DMipmaps(
