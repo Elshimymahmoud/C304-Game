@@ -35,8 +35,8 @@ public class BouncingBallEventListener implements GLEventListener,KeyListener, M
 
     ////////////////////////////////////////////////
     private GLUT glut = new GLUT();
-    float screenHeight = 200;
-    float screenWidth = 200;
+    float screenHeight = 300;
+    float screenWidth = 300;
     float xMax = screenWidth / 2f;
     float xMin = -(screenWidth / 2f);
     float yMax = screenHeight / 2f;
