@@ -1,0 +1,21 @@
+# Compiled output
+*.class
+/bin/
+/out/
+
+# IDE configuration files
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# JOGL native libraries (often large binaries)
+# Note: Only ignore if you plan to manually manage dependencies on the remote side.
+# If you want to include all JOGL dependencies, remove these lines:
+# *dll
+# *so
+# *dylib
+
+# Log files and system files
+*.log
+.DS_Store

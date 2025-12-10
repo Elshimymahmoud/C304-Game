@@ -1,0 +1,113 @@
+import com.jogamp.opengl.*;
+import com.jogamp.opengl.awt.GLCanvas;
+import com.jogamp.opengl.util.awt.TextRenderer;
+
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.event.KeyListener; // ADDED
+import java.awt.event.KeyEvent; // ADDED
+// You will need to import your SoundManager class
+import BouncingBall.SoundManager;
+import java.util.List;
+
+// MODIFIED CLASS SIGNATURE
+public class GameRenderer implements GLEventListener, MouseListener, KeyListener {
+    // States
+    private enum State {
+        MENU, GAME, HIGH_SCORES
+    }
+
+    private State currentState = State.MENU;
+
+    // Managers
+    private TextRenderer textRenderer;
+    private HighScoreManager highScoreManager;
+    private SoundManager soundManager; // ADDED
+
+    // Screen Dimensions
+    private int screenWidth = 800;
+    private int screenHeight = 600;
+
+    // Menu Options
+    // MODIFIED MENU OPTIONS (4 items now)
+    private String[] menuOptions = {"Start Game", "High Scores", "Toggle Sound", "Exit"};
+    private int selectedMenuOption = -1;
+
+    public GameRenderer() {
+        textRenderer = new TextRenderer(new Font("SansSerif", Font.BOLD, 36));
+        highScoreManager = new HighScoreManager(); // For High Scores
+
+        // ADDED SOUND INITIALIZATION
+        soundManager = new SoundManager();
+        soundManager.playBackgroundMusic();
+    }
+// ... (init, display, dispose, reshape methods remain largely unchanged) ...
+// The init method needs to register the KeyListener if you prefer the NEwT version,
+// but for AWT, it's better to register it in main.txt as shown below.
+
+    private void renderMenu() {
+        textRenderer.beginRendering(screenWidth, screenHeight);
+        textRenderer.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+
+        // Title
+        textRenderer.draw("Main Menu", screenWidth / 2 - 100, screenHeight - 100);
+
+        // Render Menu Options
+        for (int i = 0; i < menuOptions.length; i++) {
+            if (selectedMenuOption == i) {
+                textRenderer.setColor(1.0f, 0.0f, 0.0f, 1.0f); // Highlighted in red
+            } else {
+                textRenderer.setColor(1.0f, 1.0f, 1.0f, 1.0f); // Default white
+            }
+
+            // MODIFIED: Logic to show sound state
+            String optionText = menuOptions[i];
+            if (optionText.equals("Toggle Sound")) {
+                 optionText += soundManager.isMuted() ? " (Muted)" : " (Playing)";
+            }
+
+            textRenderer.draw(optionText, screenWidth / 2 - 100, screenHeight - (150 + i * 60));
+        }
+        textRenderer.endRendering();
+    }
+// ... (renderGame and renderHighScores methods remain unchanged) ...
+// ... (mouseClicked, mousePressed, mouseReleased, mouseEntered, mouseExited methods remain unchanged) ...
+
+    private void handleMenuSelection(int option) {
+        switch (option) {
+            case 0: // Start Game
+                currentState = State.GAME;
+                break;
+            case 1: // High Scores
+                currentState = State.HIGH_SCORES;
+                break;
+            case 2: // Toggle Sound (NEW OPTION)
+                soundManager.toggleMute();
+                break;
+            case 3: // Exit (INDEX SHIFTED from 2 to 3)
+                System.exit(0);
+                break;
+        }
+    }
+
+    // ADDED KEY LISTENER IMPLEMENTATION
+    @Override
+    public void keyTyped(java.awt.event.KeyEvent e) {}
+
+    @Override
+    public void keyPressed(java.awt.event.KeyEvent e) {
+        // Mute/unmute sound with 'M' key
+        if (e.getKeyCode() == java.awt.event.KeyEvent.VK_M) {
+            soundManager.toggleMute();
+        }
+        // Return to Menu with 'ESC' key
+        else if (e.getKeyCode() == java.awt.event.KeyEvent.VK_ESCAPE) {
+             if (currentState != State.MENU) {
+                currentState = State.MENU;
+            }
+        }
+    }
+
+    @Override
+    public void keyReleased(java.awt.event.KeyEvent e) {}
+}
